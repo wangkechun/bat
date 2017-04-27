@@ -420,7 +420,7 @@ Example:
 
 	bat beego.me
 
-more help information please refer to https://github.com/astaxie/bat
+more help information please refer to https://github.com/wangkechun/bat
 `
 
 func usage() {
