@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/astaxie/bat/httplib"
+	"github.com/hjson/hjson-go"
 )
 
 var defaultSetting = httplib.BeegoHttpSettings{
@@ -40,6 +41,17 @@ func getHTTP(method string, url string, args []string) (r *httplib.BeegoHttpRequ
 		// Json raws
 		if strings.HasPrefix(args[i], "Authorization") {
 			goto HEADER
+		}
+		if strings.HasPrefix(args[i], "!") {
+			str := args[i][1:]
+			var v interface{}
+			err := hjson.Unmarshal([]byte(str), &v)
+			if err != nil {
+				log.Fatal("hjson.Unmarshal", str, err)
+			}
+			r.JsonBody(v)
+			r.Method("POST")
+			continue
 		}
 		strs = strings.SplitN(args[i], ":=", 2)
 		if len(strs) == 2 {
